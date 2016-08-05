@@ -190,17 +190,79 @@ describe("GroupBy", function(){
 		var result = {};
 		for(var i=0; i < list.length; i++){
 			var key = keySelectorFn(list[i]);
-			if (typeof result[key] === 'undefined')
-				result[key] = [];
+			/*if (typeof result[key] === 'undefined')
+				result[key] = [];*/
+			result[key] = result[key] || [];
 			result[key].push(list[i]);
 		}
 		return result;
 	}
 
+	function printGroup(group){
+		for(var key in group){
+			var title = 'Key - ' + key;
+			describe(title, function(){
+				console.table(group[key]);
+			});
+		}
+	}
+
 	describe("Products by category", function(){
 		var productsByCategory = groupBy(products, function(product){
 			return product.category;
+		});	
+		printGroup(productsByCategory);
+	});
+
+	describe("Products by affordability", function(){
+		var productsByAffordability = groupBy(products, function(product){
+			return product.cost > 50 ? 'costly' : 'affordable';
 		});
-		console.log(productsByCategory);
+		printGroup(productsByAffordability);
+	})
+})
+
+describe("Reduce", function(){
+	function reduce(list, reducer, seed){
+		var result = seed;
+		for(var i=0; i < list.length; i++)
+			result = reducer(result, list[i]);
+		return result;
+	};
+
+	describe("Overall stock", function(){
+		var totalStock = reduce(products, function(result, product){
+			return result + product.units;
+		},0);
+		console.log(totalStock);
+	});
+
+	describe("Max units", function(){
+		var maxUnits = reduce(products, function(result, product){
+			return result > product.units ? result : product.units;
+		},0);
+		console.log(maxUnits);
+	});
+
+	describe("Over stocked product", function(){
+		var result = reduce(products, function(result, product){
+			return result.units > product.units ? result : product;
+		},products[0]);
+		console.table([result]);
+	});
+	function map(list, fn){
+		var result = [];
+		for(var i=0; i < list.length; i++)
+			result.push(fn(list[i]));
+		return result;
+	}
+	describe("Products with value [cost * units]", function(){
+		var productsWithValue = map(products, function(product){
+			return {
+				name : product.name,
+				value : product.cost * product.units
+			};
+		});
+		console.table(productsWithValue);
 	})
 })
