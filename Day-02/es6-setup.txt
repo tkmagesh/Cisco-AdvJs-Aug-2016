@@ -1,0 +1,24 @@
+npm init -y
+
+install babel-cli
+npm install babel-cli -g
+
+
+install babel-preset-es2015
+npm install babel-preset-es2015 --save-dev
+
+
+create .babelrc file
+{
+	"presets" : ["es2015"]
+}
+
+
+install browserify
+npm install browserify -g
+
+install babelify
+npm install babelify --save-dev
+
+
+browserify src/index.js -t babelify --outfile dist/index.js

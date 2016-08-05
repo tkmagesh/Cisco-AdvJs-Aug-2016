@@ -49,8 +49,35 @@ var Spinner = (function(){
 
 
 
+var Spinner = (function(){
+	var countSymbol = Symbol();
+	function Spinner(){
+		this[countSymbol] = 0;
+	};
+	Spinner.prototype.up = function(){
+		return ++this[countSymbol];
+	};
+	Spinner.prototype.down = function(){
+		return --this[countSymbol];
+	};
+	return Spinner;
+})()
 
-
+var Spinner = (function(){
+	var countSymbol = Symbol();
+	class Spinner{
+		constructor(){
+			this[countSymbol] = 0;
+		}
+		up(){
+			return ++this[countSymbol];
+		}
+		down(){
+			return --this[countSymbol];
+		}
+	}
+	return Spinner;
+})()
 
 
 
